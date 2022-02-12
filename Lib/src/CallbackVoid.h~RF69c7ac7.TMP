@@ -1,0 +1,27 @@
+#pragma once
+
+#include "CallbackBase.h"
+
+#include <tuple>
+#include <type_traits>
+
+namespace ImGUIWindow {
+	class CallbackVoid : public CallbackBase {
+		typedef void(*Function)();
+
+	public:
+		CallbackVoid(Function fn) :
+			CallbackBase([](CallbackBase* base) { static_cast<CallbackVoid*>(base)->Invoke(); }),
+			func(fn)
+		{
+		}
+
+	private:
+		void Invoke() {
+			func();
+		}
+
+	private:
+		Function func{ nullptr };
+	};
+}

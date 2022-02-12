@@ -11,3 +11,6 @@ CTestTestfile.cmake
 _deps
 
 **/[Bb]uild/
+**/[Oo]ut/
+**/.vs/
+**/.vscode/
