@@ -1,5 +1,34 @@
 # lib config
 
+#imgui style option
+set(
+	ImGuiStyle
+	"Dark"
+	CACHE
+	STRING
+	"ImGuiStyle chosen by the user at CMake configure time"
+)
+
+set_property(
+	CACHE
+	ImGuiStyle
+	PROPERTY
+	STRINGS
+	"Dark"
+	"Light"
+	"Classic"
+)
+
+add_compile_definitions(
+	"ImGuiTheme${ImGuiStyle}"
+)
+
+message(
+	STATUS
+	"> ImGuiStyle = '${ImGuiStyle}'"
+)
+#imgui style option
+
 file(
 	GLOB_RECURSE
 	APP_SRC

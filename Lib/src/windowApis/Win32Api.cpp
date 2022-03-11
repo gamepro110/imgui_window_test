@@ -1,4 +1,5 @@
 #include "Win32Api.h"
+
 #if WIN32
 namespace ImGUIWindow {
 	Win32Api* Win32Api::s_instance = nullptr;
@@ -51,11 +52,19 @@ namespace ImGUIWindow {
 		//io.ConfigViewportsNoTaskBarIcon = true;
 
 		// Setup Dear ImGui style
-#if _DEBUG
+#ifdef ImGuiThemeDark
 		ImGui::StyleColorsDark();
-#else
+#endif
+#ifdef ImGuiThemeLight
+		ImGui::StyleColorsLight();
+#endif
+#if ImGuiThemeClassic
 		ImGui::StyleColorsClassic();
 #endif
+
+#if !defined(ImGuiThemeDark) && !defined(ImGuiThemeLight) && !defined(ImGuiThemeClassic)
+#	error "no 'ImGuiThemeX' defined, define one and replace 'X' with 'Light', 'Dark', or 'Classic'"
+#endif // !defined(ImGuiThemeDark) && !defined(ImGuiThemeLight) && !defined(ImGuiThemeClassic)
 
 		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 		ImGuiStyle& style = ImGui::GetStyle();

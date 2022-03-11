@@ -1,6 +1,6 @@
 #include "LinuxWindowApi.h"
-#if __linux__
 
+#if __linux__
 namespace ImGUIWindow {
 	LinuxWindowApi* LinuxWindowApi::s_instance = nullptr;
 	bool* LinuxWindowApi::run = nullptr;
@@ -53,11 +53,19 @@ namespace ImGUIWindow {
 		//io.ConfigViewportsNoTaskBarIcon = true;
 
 		// Setup Dear ImGui style
-#if _DEBUG
+#ifdef ImGuiThemeDark
 		ImGui::StyleColorsDark();
-#else
+#endif
+#ifdef ImGuiThemeLight
+		ImGui::StyleColorsLight();
+#endif
+#if ImGuiThemeClassic
 		ImGui::StyleColorsClassic();
 #endif
+
+#if !defined(ImGuiThemeDark) && !defined(ImGuiThemeLight) && !defined(ImGuiThemeClassic)
+#	error "no 'ImGuiThemeX' defined, define one and replace 'X' with 'Light', 'Dark', or 'Classic'"
+#endif // !defined(ImGuiThemeDark) && !defined(ImGuiThemeLight) && !defined(ImGuiThemeClassic)
 
 		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 		ImGuiStyle& style = ImGui::GetStyle();

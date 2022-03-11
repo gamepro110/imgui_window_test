@@ -18,7 +18,7 @@ void testWinArgs(Args ... args) {
 	filter.Draw();
 	for (size_t i = 0; i < nums->size(); i++) {
 		auto num = nums->at(i);
-		std::string str { "..." + std::to_string(num) };
+		std::string str{ "..." + std::to_string(num) };
 		if (filter.PassFilter(str.c_str())) {
 			ImGui::Text(str.c_str());
 		}
@@ -80,7 +80,7 @@ int MainProgram() {
 		return -1;
 	}
 	window.Update();
-	
+
 	return 0;
 }
 

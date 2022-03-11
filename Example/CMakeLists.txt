@@ -1,6 +1,18 @@
 # example config
 
-option(ExampleAppHideConsole "hides the console window (WINDOWS ONLY)" true)
+option(
+	ExampleAppHideConsole
+	"hides the console window (WINDOWS ONLY)"
+	true
+)
+
+set(
+	ImGuiStyle
+	"Light"
+	CACHE
+	STRING
+	""
+	FORCE)
 
 file(
 	GLOB

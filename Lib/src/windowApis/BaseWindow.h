@@ -1,21 +1,27 @@
 #pragma once
 
 #if WIN32
-#define UseVulkan
-#define GLFW_INCLUDE_VULKAN
+#	define UseVulkan
+#	define GLFW_INCLUDE_VULKAN
 #elif __linux__
-#define UseVulkan
-#define GLFW_INCLUDE_VULKAN
+#	define UseVulkan
+#	define GLFW_INCLUDE_VULKAN
 #elif __APPLE__
-#define UseMetal
+#	define UseMetal
 #endif // WIN32
 
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
-#include "backends/imgui_impl_vulkan.h"
+#ifdef UseVulkan
+#	include "backends/imgui_impl_vulkan.h"
+#	include <vulkan/vulkan.h>
+#endif // UseVulkan
 
-#include <vulkan/vulkan.h>
+#ifdef UseMetal
+#	include "backends/imgui_impl_metal.h"
+#endif // UseMetal
+
 #include <string>
 
 namespace ImGUIWindow {
