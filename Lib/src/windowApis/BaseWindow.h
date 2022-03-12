@@ -23,6 +23,7 @@
 #endif // UseMetal
 
 #include <string>
+#include <vector>
 
 namespace ImGUIWindow {
 #ifdef UseVulkan
@@ -41,13 +42,25 @@ namespace ImGUIWindow {
 	static bool                     g_SwapChainRebuild = false;
 #endif // Vulkan
 
+	struct fontWraper {
+		fontWraper(ImFont*& font, int fontSize, std::string path) :
+			font(font),
+			fontSize(fontSize),
+			path(path)
+		{}
+
+		ImFont*& font;
+		int fontSize{ 12 };
+		const std::string path{ "" };
+	};
+
 	class BaseWindow {
 	public:
 		BaseWindow() {
 		}
 
 	public:
-		virtual bool Init(bool* runPtr) = 0;
+		virtual bool Init(bool* runPtr, std::vector<fontWraper>& fonts) = 0;
 		virtual void BeginFrame() = 0;
 		virtual void EndFrame() = 0;
 		virtual void Destroy() = 0;

@@ -14,6 +14,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
+#include <vector>
 
 #ifdef _DEBUG
 #define IMGUI_VULKAN_DEBUG_REPORT
@@ -30,7 +31,7 @@ namespace ImGUIWindow {
 		}
 
 	public:
-		bool Init(bool* runPtr) override;
+		bool Init(bool* runPtr, std::vector<fontWraper>& fonts) override;
 		void BeginFrame() override;
 		void EndFrame() override;
 		void Destroy() override;
@@ -68,7 +69,8 @@ namespace ImGUIWindow {
 		VkResult err{};
 		ImGui_ImplVulkanH_Window* wd;
 		ImGuiIO* io = nullptr;
-		int w, h;
+		int w;
+		int h;
 
 	};
 }

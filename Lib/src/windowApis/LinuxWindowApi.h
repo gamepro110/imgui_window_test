@@ -3,15 +3,18 @@
 
 #include "BaseWindow.h"
 
-#include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_vulkan.h"
-#include <cstdio>
-#include <cstdlib>
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_vulkan.h"
+
+#include <cstdio>
+#include <cstdlib>
 #include <string>
+#include <vector>
 
 #ifdef _DEBUG
 #define IMGUI_VULKAN_DEBUG_REPORT
@@ -28,7 +31,7 @@ namespace ImGUIWindow {
         }
 
     public:
-        bool Init(bool* runPtr) override;
+        bool Init(bool* runPtr, std::vector<fontWraper>& fonts) override;
         void BeginFrame() override;
         void EndFrame() override;
         void Destroy() override;
@@ -64,7 +67,6 @@ namespace ImGUIWindow {
 
     private:
         static LinuxWindowApi* s_instance;
-        static bool* run;
 
         VkSurfaceKHR surface;
         VkResult err{};

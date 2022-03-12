@@ -4,7 +4,7 @@
 namespace ImGUIWindow {
 	Win32Api* Win32Api::s_instance = nullptr;
 
-	bool Win32Api::Init(bool* runPtr) {
+	bool Win32Api::Init(bool* runPtr, std::vector<fontWraper>& fonts) {
 		run = runPtr;
 
 		// Setup GLFW window
@@ -91,6 +91,20 @@ namespace ImGUIWindow {
 		init_info.CheckVkResultFn = check_vk_result;
 		ImGui_ImplVulkan_Init(&init_info, wd->RenderPass);
 
+		auto loadFontFromWrapper = [&](fontWraper& wrap) {
+			wrap.font = io->Fonts->AddFontFromFileTTF(
+				wrap.path.c_str(),
+				wrap.fontSize,
+				NULL,
+				NULL
+			);
+			IM_ASSERT(wrap.font != NULL);
+		};
+
+		io->Fonts->AddFontDefault();
+		for (auto& item : fonts) {
+			loadFontFromWrapper(item);
+		}
 		// Load Fonts
 		// - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
 		// - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.

@@ -22,8 +22,8 @@ namespace ImGUIWindow {
 		delete window;
 	}
 
-	bool ImGuiWindow::Start() {
-		return window->Init(&data->Run());
+	bool ImGuiWindow::Start(std::vector<fontWraper>& fonts) {
+		return window->Init(&data->Run(), fonts);
 	}
 
 	void ImGuiWindow::Update() {

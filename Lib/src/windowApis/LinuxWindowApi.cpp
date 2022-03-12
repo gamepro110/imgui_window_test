@@ -3,14 +3,14 @@
 #if __linux__
 namespace ImGUIWindow {
 	LinuxWindowApi* LinuxWindowApi::s_instance = nullptr;
-	bool* LinuxWindowApi::run = nullptr;
 
-	bool LinuxWindowApi::Init(bool* runPtr) {
+	bool LinuxWindowApi::Init(bool* runPtr, std::vector<fontWraper>& fonts) {
 		run = runPtr;
 
 		// Setup GLFW window
 		glfwSetErrorCallback(&LinuxWindowApi::glfw_error_callback);
 		if (!glfwInit()) {
+			printf("GLFW: Unable to Init()\n");
 			return false;
 		}
 
@@ -91,6 +91,21 @@ namespace ImGUIWindow {
 		init_info.Allocator = g_Allocator;
 		init_info.CheckVkResultFn = check_vk_result;
 		ImGui_ImplVulkan_Init(&init_info, wd->RenderPass);
+
+		auto loadFontFromWrapper = [&](fontWraper& wrap) {
+			wrap.font = io->Fonts->AddFontFromFileTTF(
+				wrap.path.c_str(),
+				wrap.fontSize,
+				NULL,
+				NULL
+			);
+			IM_ASSERT(wrap.font != NULL);
+		};
+
+		io->Fonts->AddFontDefault();
+		for (auto& item : fonts) {
+			loadFontFromWrapper(item);
+		}
 
 		// Load Fonts
 		// - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.

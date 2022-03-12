@@ -26,7 +26,7 @@ namespace ImGUIWindow {
 		~ImGuiWindow();
 
 	public:
-		bool Start();
+		bool Start(std::vector<fontWraper>& fonts);
 		void Update();
 		void AddSubWindow(CallbackBase* callback);
 
