@@ -22,20 +22,19 @@ void testWinArgs(Args ... args) {
 		std::string str{ "num: " + std::to_string(num) };
 		if (filter.PassFilter(str.c_str())) {
 			ImGui::PushFont(font);
-			ImGui::Text(str.c_str());
+			ImGui::TextUnformatted(str.c_str());
 			ImGui::PopFont();
 		}
 	}
 	ImGui::Text("end");
 	ImGui::End();
-
 }
 
 template<typename ... Args>
 void test(Args ... args) {
 	ImGUIWindow::ArgUnwrapper<Args...> unwrap{ args... };
 	std::vector<int>* nums = unwrap.template Get<std::vector<int>*, 0>();
-	
+
 	static int s_num = 1;
 	s_num++;
 	nums->at(0) = s_num;
@@ -68,22 +67,13 @@ int MainProgram() {
 	bool noCollapse = true;
 	bool hideClose = true;
 
-	ImGuiWindowFlags windowFlags = 0;
-	windowFlags |= hideTitleBar ? ImGuiWindowFlags_NoTitleBar : windowFlags;
-	windowFlags |= noCollapse ? ImGuiWindowFlags_NoCollapse : windowFlags;
-
 	ImFont* custom{ nullptr };
 	std::vector<ImGUIWindow::fontWraper> fonts;
 	fonts.emplace_back(
 		ImGUIWindow::fontWraper(
 			custom,
 			24,
-			#if WIN32
-			// different paths because different build enviroments
-			std::string("../../../../Chiller.TTF")
-			#elif __linux__
-			std::string("../../Chiller.TTF")
-			#endif
+			std::string("../../../../Chiller.ttf")
 		)
 	);
 
@@ -122,16 +112,12 @@ void testWin() {
 	windowFlags |= noCollapse ? ImGuiWindowFlags_NoCollapse : windowFlags;
 
 	ImGui::Begin("testWin", NULL, windowFlags);
-	//---------------------------------
-
-	for (size_t i = 0; i < 20; i++)
 	{
-		if (ImGui::CollapsingHeader(("secret" + std::to_string(i)).c_str()))
-		{
-			ImGui::Text("found me..., now what?");
+		for (size_t i = 0; i < 10; i++) {
+			if (ImGui::CollapsingHeader(("secret" + std::to_string(i)).c_str())) {
+				ImGui::Text("found me..., now what?");
+			}
 		}
 	}
-
-	//---------------------------------
 	ImGui::End();
 }

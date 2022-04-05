@@ -71,7 +71,6 @@ namespace ImGUIWindow {
         VkSurfaceKHR surface;
         VkResult err{};
         ImGui_ImplVulkanH_Window* wd;
-        ImGuiIO* io = nullptr;
         int w;
         int h;
         std::string windowTitle;

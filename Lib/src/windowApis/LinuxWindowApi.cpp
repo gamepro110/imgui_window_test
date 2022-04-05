@@ -32,7 +32,7 @@ namespace ImGUIWindow {
 		SetupVulkan(extensions, extensions_count);
 
 		// Create Window Surface
-		surface;
+		surface = {};
 		err = glfwCreateWindowSurface(g_Instance, glfwWindow, g_Allocator, &surface);
 		check_vk_result(err);
 
@@ -92,21 +92,10 @@ namespace ImGUIWindow {
 		init_info.CheckVkResultFn = check_vk_result;
 		ImGui_ImplVulkan_Init(&init_info, wd->RenderPass);
 
-		auto loadFontFromWrapper = [&](fontWraper& wrap) {
-			wrap.font = io->Fonts->AddFontFromFileTTF(
-				wrap.path.c_str(),
-				wrap.fontSize,
-				NULL,
-				NULL
-			);
-			IM_ASSERT(wrap.font != NULL);
-		};
-
 		io->Fonts->AddFontDefault();
 		for (auto& item : fonts) {
 			loadFontFromWrapper(item);
 		}
-
 		// Load Fonts
 		// - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
 		// - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
@@ -219,7 +208,7 @@ namespace ImGUIWindow {
 
 	void LinuxWindowApi::glfw_closeWindow_callback(GLFWwindow*) {
 		fprintf(stderr, "Close window\n");
-		*(Get()->run) = false;
+		(*Get()->run) = false;
 	}
 
 	void LinuxWindowApi::glfw_error_callback(int error, const char* description) {
@@ -227,10 +216,6 @@ namespace ImGUIWindow {
 			return; // disables "no opengl context" error from glfw
 		}
 		fprintf(stderr, "Glfw Error %d: %s\n", error, description);
-	}
-
-	void LinuxWindowApi::SetWindowTitle(const std::string& title) {
-		windowTitle = std::string{ title };
 	}
 
 	void LinuxWindowApi::check_vk_result(VkResult err) {
@@ -313,12 +298,10 @@ namespace ImGUIWindow {
 			// most common cases (multi-gpu/integrated+dedicated graphics). Handling more complicated setups (multiple
 			// dedicated GPUs) is out of scope of this sample.
 			int use_gpu = 0;
-			for (int i = 0; i < (int)gpu_count; i++)
-			{
+			for (int i = 0; i < (int)gpu_count; i++) {
 				VkPhysicalDeviceProperties properties;
 				vkGetPhysicalDeviceProperties(gpus[i], &properties);
-				if (properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
-				{
+				if (properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
 					use_gpu = i;
 					break;
 				}
@@ -334,12 +317,12 @@ namespace ImGUIWindow {
 			vkGetPhysicalDeviceQueueFamilyProperties(g_PhysicalDevice, &count, NULL);
 			VkQueueFamilyProperties* queues = (VkQueueFamilyProperties*)malloc(sizeof(VkQueueFamilyProperties) * count);
 			vkGetPhysicalDeviceQueueFamilyProperties(g_PhysicalDevice, &count, queues);
-			for (uint32_t i = 0; i < count; i++)
-				if (queues[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
-				{
+			for (uint32_t i = 0; i < count; i++) {
+				if (queues[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
 					g_QueueFamily = i;
 					break;
 				}
+			}
 			free(queues);
 			IM_ASSERT(g_QueueFamily != (uint32_t)-1);
 		}
@@ -398,8 +381,7 @@ namespace ImGUIWindow {
 		// Check for WSI support
 		VkBool32 res;
 		vkGetPhysicalDeviceSurfaceSupportKHR(g_PhysicalDevice, g_QueueFamily, wd->Surface, &res);
-		if (res != VK_TRUE)
-		{
+		if (res != VK_TRUE) {
 			fprintf(stderr, "Error no WSI support on physical device 0\n");
 			exit(-1);
 		}
@@ -446,8 +428,7 @@ namespace ImGUIWindow {
 		VkSemaphore image_acquired_semaphore = wd->FrameSemaphores[wd->SemaphoreIndex].ImageAcquiredSemaphore;
 		VkSemaphore render_complete_semaphore = wd->FrameSemaphores[wd->SemaphoreIndex].RenderCompleteSemaphore;
 		err = vkAcquireNextImageKHR(g_Device, wd->Swapchain, UINT64_MAX, image_acquired_semaphore, VK_NULL_HANDLE, &wd->FrameIndex);
-		if (err == VK_ERROR_OUT_OF_DATE_KHR || err == VK_SUBOPTIMAL_KHR)
-		{
+		if (err == VK_ERROR_OUT_OF_DATE_KHR || err == VK_SUBOPTIMAL_KHR) {
 			g_SwapChainRebuild = true;
 			return;
 		}
@@ -507,8 +488,9 @@ namespace ImGUIWindow {
 	}
 
 	void LinuxWindowApi::FramePresent(ImGui_ImplVulkanH_Window* wd) {
-		if (g_SwapChainRebuild)
+		if (g_SwapChainRebuild) {
 			return;
+		}
 		VkSemaphore render_complete_semaphore = wd->FrameSemaphores[wd->SemaphoreIndex].RenderCompleteSemaphore;
 		VkPresentInfoKHR info = {};
 		info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -518,8 +500,7 @@ namespace ImGUIWindow {
 		info.pSwapchains = &wd->Swapchain;
 		info.pImageIndices = &wd->FrameIndex;
 		VkResult err = vkQueuePresentKHR(g_Queue, &info);
-		if (err == VK_ERROR_OUT_OF_DATE_KHR || err == VK_SUBOPTIMAL_KHR)
-		{
+		if (err == VK_ERROR_OUT_OF_DATE_KHR || err == VK_SUBOPTIMAL_KHR) {
 			g_SwapChainRebuild = true;
 			return;
 		}

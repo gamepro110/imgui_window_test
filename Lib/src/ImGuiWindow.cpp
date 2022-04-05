@@ -27,11 +27,9 @@ namespace ImGUIWindow {
 	}
 
 	void ImGuiWindow::Update() {
-		while (data->Run())
-		{
+		while (data->Run()) {
 			window->BeginFrame();
-			for (auto& sub : subWindows)
-			{
+			for (auto& sub : subWindows) {
 				sub->Invoke();
 			}
 			window->EndFrame();

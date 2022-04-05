@@ -8,7 +8,7 @@ option(
 
 set(
 	ImGuiStyle
-	"Light"
+	"Classic"
 	CACHE
 	STRING
 	""

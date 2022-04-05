@@ -24,10 +24,11 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 namespace ImGUIWindow {
 #ifdef UseVulkan
-	static VkAllocationCallbacks* g_Allocator = NULL;
+	static VkAllocationCallbacks*	g_Allocator = NULL;
 	static VkInstance               g_Instance = VK_NULL_HANDLE;
 	static VkPhysicalDevice         g_PhysicalDevice = VK_NULL_HANDLE;
 	static VkDevice                 g_Device = VK_NULL_HANDLE;
@@ -51,13 +52,13 @@ namespace ImGUIWindow {
 
 		ImFont*& font;
 		int fontSize{ 12 };
-		const std::string path{ "" };
+		const std::string path{};
 	};
 
 	class BaseWindow {
 	public:
-		BaseWindow() {
-		}
+		BaseWindow() = default;
+		virtual ~BaseWindow() = default;
 
 	public:
 		virtual bool Init(bool* runPtr, std::vector<fontWraper>& fonts) = 0;
@@ -74,9 +75,24 @@ namespace ImGUIWindow {
 		}
 
 	protected:
+		void loadFontFromWrapper(fontWraper& wrap) {
+			wrap.font = io->Fonts->AddFontFromFileTTF(
+				wrap.path.c_str(),
+				wrap.fontSize,
+				NULL,
+				NULL
+			);
+			IM_ASSERT(wrap.font != NULL);
+			if (wrap.font == nullptr) {
+				std::cout << "failed to load font (\"" << wrap.path << "\")\n";
+			}
+		};
+
+	protected:
 		bool* run{ nullptr };
-		std::string windowTitle;
 		GLFWwindow* glfwWindow{ nullptr };
+		std::string windowTitle;
+		ImGuiIO* io = nullptr;
 
 	};
 }
